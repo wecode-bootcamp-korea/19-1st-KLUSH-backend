@@ -1,10 +1,8 @@
 from django.db import models
 
-# Create your models here.
-
 class Order(models.Model):
     user            = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    order_status    = models.ForeignKey('OrderStatus', on_delete=models.CASCADE)
+    order_status    = models.ForeignKey('OrderStatus', on_delete=models.PROTECT)
     total_price     = models.IntegerField(null=True)
     shipping_price  = models.IntegerField(null=True)
     order_date_time = models.DateTimeField(auto_now=True)

@@ -1,11 +1,9 @@
 from django.db import models
 
-# Create your models here.
-
 class Rate(models.Model):
     rate    = models.IntegerField()
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
-    user    = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    user    = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         db_table='rates'

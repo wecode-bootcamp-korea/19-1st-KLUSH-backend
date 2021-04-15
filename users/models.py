@@ -3,7 +3,7 @@ from django.db import models
 class User(models.Model):
     password     = models.CharField(max_length=300)
     phone_number = models.CharField(max_length=45, unique=True)
-    email        = models.EmailField(max_length=300, unique=True)
+    email        = models.EmailField(max_length=255, unique=True)
     name         = models.CharField(max_length=45)
     nickname     = models.CharField(max_length=45, blank=True)
     create_at    = models.DateTimeField(auto_now_add=True)

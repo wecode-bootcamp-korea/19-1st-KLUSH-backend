@@ -22,7 +22,7 @@ class SubCategory(models.Model):
 
 class Product(models.Model):
     name          = models.CharField(max_length=45)
-    price         = models.IntegerField()
+    price         = models.DecimalField(max_digits=20, decimal_places=2)
     hashtag       = models.CharField(max_length=45)
     created_at    = models.DateTimeField(auto_now_add=True)
     updated_at    = models.DateTimeField(auto_now=True)
@@ -40,8 +40,8 @@ class ProductImage(models.Model):
         db_table = "product_images"
 
 class ProductOption(models.Model):
-    weight     = models.IntegerField()
-    extra_cost = models.IntegerField()
+    weight     = models.DecimalField(max_digits=10, decimal_places=2)
+    extra_cost = models.DecimalField(max_digits=20, decimal_places=2)
     product    = models.ForeignKey('Product', on_delete=models.CASCADE)
 
     class Meta:

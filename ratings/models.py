@@ -1,7 +1,7 @@
 from django.db import models
 
 class Rate(models.Model):
-    rate    = models.IntegerField()
+    rate    = models.DecimalField(max_digits=6, decimal_places=2)
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
     user    = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
 

@@ -18,7 +18,7 @@ class OrderStatus(models.Model):
 
 class ShippingInformation(models.Model):
     address      = models.CharField(max_length=200)
-    message      = models.CharField(max_length=200, blank=True)
+    message      = models.CharField(max_length=200, null=True)
     phone_number = models.CharField(max_length=45)
     order        = models.ForeignKey('Order', on_delete=models.CASCADE)
 

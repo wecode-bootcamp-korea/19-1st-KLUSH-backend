@@ -6,9 +6,10 @@ from django.http            import JsonResponse
 from django.views           import View
 from django.db.models       import Q
 
-from .utils import validate_phone_number, validate_email, validate_password
-from my_settings  import ALGORITHM, SECRET_KEY
-from users.models import User
+from .utils        import validate_phone_number, validate_email, validate_password
+from my_settings   import ALGORITHM, SECRET_KEY
+from users.models  import User
+from orders.models import Order, OrderStatus
 
 class SignUpView(View):
     def post(self, request):
@@ -33,19 +34,25 @@ class SignUpView(View):
                     Q(phone_number = phone_number) |
                     Q(email = email) 
                     ).exists():
-                return JsonResponse({'MESSAGE':'ALREADT_EXISTS'}, status=400)
+                return JsonResponse({'MESSAGE':'ALREADY_EXISTS'}, status=400)
 
             password        = data['password'].encode('utf-8')
             hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
             hashed_password = hashed_password.decode('utf-8')
 
-            User.objects.create(
+            user = User.objects.create(
                     name         = name,
                     phone_number = phone_number,
                     email        = email,
                     nickname     = nickname,
                     password     = hashed_password
                     )
+
+            Order.objects.create(
+                    user         = user, 
+                    order_status = OrderStatus.objects.get(status=0)
+                    )
+
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
         except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=401)
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)

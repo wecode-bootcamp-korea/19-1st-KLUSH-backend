@@ -7,45 +7,20 @@ class MenuView(View):
     def get(self, request):
         try:
             results = []
-            
-            menu_list = Menu.objects.all()
-            menu_items = []
-            for menu in menu_list:
-                menu_items.append(
-                    {
-                        "id" : menu.id,
-                        "name" : menu.name
-                    }
-                )
-            
-            main_list = MainCategory.objects.all()
-            main_items = []
-            for main in main_list:
-                main_items.append(
-                    {
-                        "id" : main.id,
-                        "name" : main.name
-                    }
-                )
-            
-            sub_list = SubCategory.objects.all()
-            sub_items = []
-            for sub in sub_list:
-                sub_items.append(
-                    {
-                        "id" : sub.id,
-                        "name" : sub.name
-                    }
-                )
-            
-            results.append(
-                {
-                    "menu"          : menu_items,
-                    "main_category" : main_items,
-                    "sub_category"  : sub_items
-                }
-            )
-
+            main_category = MainCategory.objects.all()
+            for main in main_category:
+                    sub_category = main.subcategory_set.all()
+                    sub_list = []
+                    for sub in sub_category:
+                        sub_pair = {"id" : sub.id, "name" : sub.name}
+                        sub_list.append(sub_pair)
+                    results.append(
+                        {   
+                            "id"           : main.id,
+                            "name"         : main.name,
+                            "sub_category" : sub_list
+                        }
+                    )
             return JsonResponse({'results':results}, status=200)
         
         except KeyError:

@@ -8,7 +8,7 @@ class MenuView(View):
         try:
             menu_list = Menu.objects.all()
             results = []
-            for menu in menu_list:치
+            for menu in menu_list:
                 main_category = menu.maincategory_set.all()
                 main_list = []
                 for main in main_category:
@@ -35,4 +35,5 @@ class MenuView(View):
         
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
 

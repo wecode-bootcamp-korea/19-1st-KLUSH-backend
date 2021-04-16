@@ -29,7 +29,7 @@ class Cart(models.Model):
     order       = models.ForeignKey('Order', on_delete=models.CASCADE)
     quantity    = models.IntegerField()
     option      = models.ForeignKey('products.ProductOption', on_delete=models.CASCADE)
-    total_price = models.DecimalField(max_digits=20, decimal_places=2, null=True)
+    total_price = models.DecimalField(max_digits=20, decimal_places=2)
 
     class Meta:
         db_table='carts'

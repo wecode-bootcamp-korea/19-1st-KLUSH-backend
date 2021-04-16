@@ -400,3 +400,6 @@ fabric.properties
 my_settings.py
 *.csv
 .idea/*
+orders/management/*
+products/management/*
+users/management/*

@@ -64,7 +64,10 @@ class SignInView(View):
             login_id = data['login_id']
             password = data['password']
 
-            if user := User.objects.filter(email = login_id):
+            if user := User.objects.filter(
+                    Q(email        = login_id) |
+                    Q(account_name = login_id)
+                    ):
                 
                 if bcrypt.checkpw(password.encode('utf-8'), user.get().password.encode('utf-8')):
                     token = jwt.encode({'id' : user.get().id}, SECRET_KEY['secret'], algorithm=ALGORITHM)

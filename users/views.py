@@ -6,7 +6,7 @@ from django.http            import JsonResponse
 from django.views           import View
 from django.db.models       import Q
 
-from .utils        import validate_phone_number, validate_email, validate_password
+from .utils        import validate_account_name, validate_phone_number, validate_email, validate_password
 from my_settings   import ALGORITHM, SECRET_KEY
 from users.models  import User
 from orders.models import Order, OrderStatus
@@ -19,6 +19,7 @@ class SignUpView(View):
             phone_number = data['phone_number']
             email        = data['email']
             nickname     = data.get('nickname', None)
+            account_name = data['account_name']
             password     = data['password']
 
             if not validate_phone_number(phone_number):
@@ -27,12 +28,16 @@ class SignUpView(View):
             if not validate_email(email):
                 return JsonResponse({'MESSAGE':'INVALID_EMAIL'}, status=400)
 
+            if not validate_account_name(account_name):
+                return JsonResponse({'MESSAGE':'INVALID_ACCOUNT_NAME'}, status=400)
+
             if not validate_password(password):
                 return JsonResponse({'MESSAGE':'INVALID_PASSWORD'}, status=400)
 
             if User.objects.filter(
                     Q(phone_number = phone_number) |
-                    Q(email = email) 
+                    Q(email = email) |
+                    Q(account_name = account_name)
                     ).exists():
                 return JsonResponse({'MESSAGE':'ALREADY_EXISTS'}, status=400)
 
@@ -45,7 +50,8 @@ class SignUpView(View):
                     phone_number = phone_number,
                     email        = email,
                     nickname     = nickname,
-                    password     = hashed_password
+                    account_name = account_name,
+                    password     = hashed_password,
                     )
 
             Order.objects.create(

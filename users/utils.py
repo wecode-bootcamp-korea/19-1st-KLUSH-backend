@@ -15,10 +15,13 @@ def validate_email(email):
     email_form = re.compile('^[a-zA-Z0-9+-_.]+@[a-z]+\.[a-z]+$')
     return email_form.match(email)
 
-#최소 10자, 최소 하나의 문자 및 하나의 숫자
 def validate_password(password):
-    password_form = re.compile('^(?=.*[A-Za-z])(?=.*\d)(\S){10,}$')
+    password_form = re.compile('^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d](\S){10,}$')
     return password_form.match(password)
+
+def validate_account_name(account_name):
+    account_name_form = re.compile('^(?=.*\w)(?!.*?\W)(\S)*$')
+    return account_name_form.match(account_name)
 
 def login_decorator(func):
     def wrapper(self, request, *args, **kwargs):

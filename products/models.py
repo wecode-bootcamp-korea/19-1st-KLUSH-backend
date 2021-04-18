@@ -33,8 +33,9 @@ class Product(models.Model):
         db_table = "products"
 
 class ProductImage(models.Model):
-    image_url = models.CharField(max_length=2000)
-    product   = models.ForeignKey('Product', on_delete=models.CASCADE)
+    image_url        = models.CharField(max_length=2000)
+    product          = models.ForeignKey('Product', on_delete=models.CASCADE)
+    thumbnail_status = models.BooleanField()
 
     class Meta:
         db_table = "product_images"

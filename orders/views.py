@@ -1,1 +1,1 @@
-from django.views import View
+from django.views     import View

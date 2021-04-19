@@ -26,3 +26,23 @@ class MenuView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE': 'KEY_ERROR'}, status=400)
+
+class MainProductView(View):
+    def get(self, request):
+        try:
+            product_list = Product.objects.all()[:12]
+            results = [
+                {
+                    "id"          : product.id,
+                    "image_url"   : product.productimage_set.filter(thumbnail_status=True).first().image_url,
+                    "name"        : product.name,
+                    "description" : product.hashtag,
+                    "price"       : float(product.price)
+                } 
+                for product in product_list
+            ]
+            
+            return JsonResponse({'results' : results}, status=200)
+
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)

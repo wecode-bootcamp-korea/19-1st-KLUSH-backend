@@ -403,3 +403,4 @@ my_settings.py
 orders/management/*
 products/management/*
 users/management/*
+db_uploader.py

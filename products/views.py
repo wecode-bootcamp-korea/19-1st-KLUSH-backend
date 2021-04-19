@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http  import JsonResponse
 from django.views import View
 
 from .models import Menu, MainCategory, SubCategory, Product, ProductImage, ProductOption
@@ -10,8 +10,8 @@ class MenuView(View):
             main_category = MainCategory.objects.all()
             results = [
                 {
-                    "id" : main.id,
-                    "name" : main.name,
+                    "id"             : main.id,
+                    "name"           : main.name,
                     "sub_categories" : [{"id" : sub.id, "name" : sub.name} for sub in main.subcategory_set.all()]
                 }
                 for main in main_category

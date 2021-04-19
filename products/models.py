@@ -51,7 +51,7 @@ class ProductOption(models.Model):
 class Label(models.Model):
     name    = models.CharField(max_length=45)
     color   = models.CharField(max_length=45)
-    product = models.ManyToManyField('Product', through='ProductsLabels')
+    product = models.ManyToManyField('Product', through='ProductLabel')
 
     class Meta:
         db_table = "labels"

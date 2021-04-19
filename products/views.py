@@ -26,3 +26,26 @@ class MenuView(View):
 
         except KeyError:
             return JsonResponse({'MESSAGE': 'KEY_ERROR'}, status=400)
+
+
+class ProductView(View):
+    def get(self,request,product_id=None):
+        if product_id:
+            if Product.objects.filter(id=product_id).exists:
+                product = Product.objects.get(id=product_id)
+
+                product_informations = [{
+                    'product_name'    : product.name,
+                    'product_price'   : float(product.price),
+                    'product_hashtag' : product.hashtag,
+                    'product_thumbnail_image' : product.productimage_set.filter(thumbnail_status=1).get().image_url,
+                    'product_image'   : [image.image_url for image in product.productimage_set.filter(thumbnail_status=0)],
+                    'product_options' : [{'id'    : option.id,
+                                    'weight'     : float(option.weight),
+                                    'extra_cost' : float(option.extra_cost)
+                                    }for option in ProductOption.objects.filter(product_id=product_id)],
+                    }]
+
+                return JsonResponse({'result': product_informations}, status=200)
+        if not product_id:
+            return JsonResponse({'MESSAGE': 'NOT FOUND PRODUCT'}, status=404)

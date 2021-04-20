@@ -64,7 +64,7 @@ class MainProductView(View):
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
 
-class ProductView(View):
+class CategoryView(View):
     def get(self, request):
         try:
             main_category_id = request.GET.get('main_category_id')

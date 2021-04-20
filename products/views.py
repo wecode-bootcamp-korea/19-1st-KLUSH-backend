@@ -39,7 +39,7 @@ class ProductView(View):
                                     }for option in ProductOption.objects.filter(product_id=product_id)],
                 }]
 
-            return JsonResponse({'result': product_informations}, status=200)
+            return JsonResponse({'results': product_informations}, status=200)
         return JsonResponse({'MESSAGE': 'NOT FOUND PRODUCT'}, status=404)
 
 class MainProductView(View):

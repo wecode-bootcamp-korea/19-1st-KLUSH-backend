@@ -30,7 +30,8 @@ class MenuView(View):
 class MainProductView(View):
     def get(self, request):
         try:
-            product_list = Product.objects.all()[:12]
+            PRODUCT_COUNT = 12
+            product_list = Product.objects.all()[:PRODUCT_COUNT]
             results = [
                 {
                     "id"          : product.id,

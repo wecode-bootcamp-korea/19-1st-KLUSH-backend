@@ -1,5 +1,6 @@
-from django.http  import JsonResponse
-from django.views import View
+from django.http      import JsonResponse
+from django.views     import View
+from django.db.models import Q
 
 from .models import Menu, MainCategory, SubCategory, Product, ProductImage, ProductOption
 
@@ -62,3 +63,38 @@ class MainProductView(View):
         
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+
+class CategoryView(View):
+    def get(self, request):
+        try:
+            main_category_id = request.GET.get('main_category_id')
+            sub_category_id  = request.GET.get('sub_category_id')
+            sort_type        = request.GET.get('sort')
+
+            sort_list        = {
+                "productPrice_asc"  : "price",
+                "productPrice_desc" : "-price"
+            }
+
+            product_list     = Product.objects.filter(Q(sub_category=sub_category_id)|
+                                                      Q(main_category=main_category_id))
+
+            if(sort_type is not None):
+                product_list = product_list.order_by(sort_list[sort_type])
+            
+            results = [
+                {
+                    "id"          : product.id,
+                    "image_url"   : product.productimage_set.filter(thumbnail_status=True).first().image_url,
+                    "name"        : product.name,
+                    "description" : product.hashtag,
+                    "price"       : float(product.price), 
+                    "label"       : [{"type" : label.name, "color" : label.color} for label in product.label_set.all()]
+                }
+                for product in product_list
+            ]
+            return JsonResponse({'results' : results}, status=200)
+        
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+

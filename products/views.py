@@ -41,3 +41,24 @@ class ProductView(View):
 
             return JsonResponse({'result': product_informations}, status=200)
         return JsonResponse({'MESSAGE': 'NOT FOUND PRODUCT'}, status=404)
+
+class MainProductView(View):
+    def get(self, request):
+        try:
+            PRODUCT_COUNT = 12
+            product_list = Product.objects.all()[:PRODUCT_COUNT]
+            results = [
+                {
+                    "id"          : product.id,
+                    "image_url"   : product.productimage_set.filter(thumbnail_status=True).first().image_url,
+                    "name"        : product.name,
+                    "description" : product.hashtag,
+                    "price"       : float(product.price)
+                } 
+                for product in product_list
+            ]
+        
+            return JsonResponse({'results' : results}, status=200)
+        
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)

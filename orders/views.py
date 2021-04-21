@@ -17,13 +17,10 @@ class CartView(View):
             product_id  = data['product_id']
             option_id   = data['option_id']
 
-            if not Order.objects.filter(user = user, order_status_id = 1).exists():
-                Order.objects.create(
-                        user = user,
-                        order_status = OrderStatus.objects.get(status = 0)
-                        )
-
-            order = Order.objects.get(user = user, order_status_id = 1)
+            order, create = Order.objects.get_or_create(
+                    user = user,
+                    order_status_id = 1
+                    )
 
             if Cart.objects.filter(order_id = order.id, product_id = product_id).exists():
                 
@@ -74,6 +71,9 @@ class CartView(View):
     def delete(self, request):
         data = json.loads(request.body)
         
-        Cart.objects.get(product_id = data['product_id']).delete()
+        Cart.objects.get(
+                product_id = data['product_id'], 
+                option_id = data['option_id']
+                ).delete()
         
         return JsonResponse({'MESSAGE':'SUCCESS'}, status=200)

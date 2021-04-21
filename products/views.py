@@ -99,3 +99,25 @@ class CategoryView(View):
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
 
+class SearchView(View):
+    def get(self, request):
+        try:
+            keyword = request.GET.get('keyword')
+
+            product_list = Product.objects.filter(name__icontains = keyword)
+
+            results = [
+                {
+                    "id"          : product.id,
+                    "image_url"   : product.productimage_set.filter(thumbnail_status=True).first().image_url,
+                    "name"        : product.name,
+                    "description" : product.hashtag,
+                    "price"       : float(product.price), 
+                    "label"       : [{"type" : label.name, "color" : label.color} for label in product.label_set.all()]
+                }
+                for product in product_list
+            ]
+            return JsonResponse({'results' : results}, status=200)
+
+        except KeyError:
+            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)

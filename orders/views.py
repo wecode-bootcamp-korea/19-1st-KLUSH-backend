@@ -3,7 +3,7 @@ import json
 from django.views     import View
 from django.http      import JsonResponse
 
-from orders.models   import Cart, Order, OrderStatus
+from orders.models   import Cart, Order
 from products.models import Product, ProductOption
 from users.utils     import login_decorator
 
@@ -18,9 +18,9 @@ class CartView(View):
             option_id   = data['option_id']
 
             order, create = Order.objects.get_or_create(
-                    user = user,
-                    order_status_id = 1
-                    )
+                                    user            = user,
+                                    order_status_id = 1
+                                    )
 
             if Cart.objects.filter(order_id = order.id, product_id = product_id).exists():
                 
@@ -73,7 +73,7 @@ class CartView(View):
         
         Cart.objects.get(
                 product_id = data['product_id'], 
-                option_id = data['option_id']
+                option_id  = data['option_id']
                 ).delete()
         
         return JsonResponse({'MESSAGE':'SUCCESS'}, status=200)

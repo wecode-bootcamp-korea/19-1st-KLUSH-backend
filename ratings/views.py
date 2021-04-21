@@ -1,10 +1,12 @@
 import json
+from json.decoder import JSONDecodeError
 
 from django.views     import View
 from django.http      import JsonResponse
 
 from users.utils     import login_decorator
-from .models         import Rate
+from .models         import Rate, Comment, CommentImage
+from products.models import Product
 
 class RateView(View):
     @login_decorator
@@ -52,6 +54,8 @@ class CommentView(View):
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
+        except JSONDecodeError:
+            return JsonResponse({'MESSAGE':'JSON_DECODE_ERROR'}, status=400)
 
     def get(self, request, product_id):
         if not Product.objects.filter(id = product_id).exists():
@@ -62,7 +66,7 @@ class CommentView(View):
             'image_url' : [image.image_url for image in comment_list.commentimage_set.all()],
             'created_at' : comment_list.created_at
             }for comment_list in Comment.objects.filter(product_id = product_id)]
-        return JsonResponse({'MESSAGE':'SUCCESS', 'RESULT':comment_list}, status=200)
+        return JsonResponse({'MESSAGE':'SUCCESS', 'results':comment_list}, status=200)
 
     @login_decorator
     def delete(self, request):

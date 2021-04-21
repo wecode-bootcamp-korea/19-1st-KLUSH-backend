@@ -17,7 +17,6 @@ class CartView(View):
             product_id          = data['product_id']
             option_id           = data['option_id']
             current_quantity    = 0
-            product_total_price = 0
 
             order, create = Order.objects.get_or_create(
                                     user            = user,
@@ -34,7 +33,6 @@ class CartView(View):
                     option_id  = option_id,
                     defaults   = {
                         'quantity'    : current_quantity + quantity,
-                        'total_price' : product_total_price
                         }
                     )
             

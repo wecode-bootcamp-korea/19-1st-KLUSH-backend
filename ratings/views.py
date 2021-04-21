@@ -12,11 +12,10 @@ class RateView(View):
         try:
             data = json.loads(request.body)
 
-            if rate := Rate.objects.filter(user=request.user,product_id=data['product_id']):
-                rate.update(rate=data['rate'])
-                return JsonResponse({'MESSAGE': 'SUCCESS'}, status=201)
-
-            Rate.objects.create(user=request.user,product_id=data['product_id'],rate=data['rate'])
+            Rate.objects.update_or_create(
+                user       = request.user,
+                product_id = data['product_id'],
+                defaults   = {'rate':data['rate']})
             return JsonResponse({'MESSAGE': 'SUCCESS'}, status=201)
 
         except KeyError:

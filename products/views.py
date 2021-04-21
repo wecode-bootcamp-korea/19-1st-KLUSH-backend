@@ -78,16 +78,17 @@ class CategoryView(View):
                 "productPrice_desc" : "-price"
             }
 
-            product_list     = Product.objects.filter(Q(sub_category=sub_category_id)|
+            if page and limit:
+                start        = (int(page) - 1) * int(limit)
+                end          = int(page) * int(limit) 
+                product_list = Product.objects.filter(Q(sub_category=sub_category_id)|
+                                                      Q(main_category=main_category_id))[start : end]
+            else:
+                product_list = Product.objects.filter(Q(sub_category=sub_category_id)|
                                                       Q(main_category=main_category_id))
 
             if(sort_type is not None):
                 product_list = product_list.order_by(sort_list[sort_type])
-            
-            if page and limit:
-                start = (int(page) - 1) * int(limit)
-                end   = int(page) * int(limit) 
-                product_list = product_list[start:end]
 
             results = [
                 {

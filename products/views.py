@@ -70,6 +70,8 @@ class CategoryView(View):
             main_category_id = request.GET.get('main_category_id')
             sub_category_id  = request.GET.get('sub_category_id')
             sort_type        = request.GET.get('sort')
+            page             = request.GET.get('page')
+            limit            = request.GET.get('limit')
 
             sort_list        = {
                 "productPrice_asc"  : "price",
@@ -82,6 +84,11 @@ class CategoryView(View):
             if(sort_type is not None):
                 product_list = product_list.order_by(sort_list[sort_type])
             
+            if page and limit:
+                start = (int(page) - 1) * int(limit)
+                end   = int(page) * int(limit) 
+                product_list = product_list[start:end]
+
             results = [
                 {
                     "id"          : product.id,

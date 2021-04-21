@@ -38,7 +38,7 @@ class CartView(View):
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-        except JSONDecodeError:
+        except json.JSONDecodeError:
             return JsonResponse({'MESSAGE':'JSON_DECODE_ERROR'}, status=400)
 
     @login_decorator

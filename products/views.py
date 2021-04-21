@@ -1,6 +1,6 @@
 from django.http      import JsonResponse
 from django.views     import View
-from django.db.models import Q
+from django.db.models import Q, Avg
 
 from .models import Menu, MainCategory, SubCategory, Product, ProductImage, ProductOption
 
@@ -38,6 +38,7 @@ class ProductView(View):
                                     'weight'     : float(option.weight),
                                     'extra_cost' : float(option.extra_cost)
                                     }for option in ProductOption.objects.filter(product_id=product_id)],
+                'product_rate'    : float(product.rate_set.all().aggregate(Avg('rate'))['rate__avg'])
                 }]
 
             return JsonResponse({'results': product_informations}, status=200)

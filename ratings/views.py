@@ -29,7 +29,7 @@ class RateView(View):
 
         rate = int(Rate.objects.get(user_id=user_id,product_id=product_id).rate)
 
-        return JsonResponse({'results': rate}, status=200)
+        return JsonResponse({'result': rate}, status=200)
 
 class CommentView(View):
     @login_decorator

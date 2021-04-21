@@ -16,21 +16,21 @@ class CartView(View):
             quantity    = int(data['quantity'])
             product_id  = data['product_id']
             option_id   = data['option_id']
-            
+
             order = Order.objects.get(user = user, order_status_id = 1)
 
             if Cart.objects.filter(order_id = order.id, product_id = product_id).exists():
-                
+
                 cart_lists = Cart.objects.get(order_id = order.id, product_id = product_id)
-                
+
                 cart_lists.quantity += quantity
                 cart_lists.total_price = (
                         cart_lists.product.price + cart_lists.product.productoption_set.get(id=product_id).extra_cost
                         ) * cart_lists.quantity
                 cart_lists.save()
-                
+
                 return JsonResponse({'MESSAGE':'SUCCESS_UPDATE_QUANTITY'}, status=201)
-            
+
             total_price = (
                     Product.objects.get(id=product_id).price + ProductOption.objects.get(id=option_id).extra_cost
                     ) * quantity

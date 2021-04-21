@@ -12,15 +12,9 @@ class RateView(View):
         try:
             data = json.loads(request.body)
 
-            current_rate = data['rate']
-
-            if Rate.objects.filter(user=request.user, product_id=data['product_id']).exists():
-                current_rate = Rate.objects.get(user=request.user, product_id=data['product_id']).rate
-
             Rate.objects.update_or_create(
                 user       = request.user,
                 product_id = data['product_id'],
-                rate       = current_rate,
                 defaults   = {'rate':data['rate']})
             return JsonResponse({'MESSAGE': 'SUCCESS'}, status=201)
 

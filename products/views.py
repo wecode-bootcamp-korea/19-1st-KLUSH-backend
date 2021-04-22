@@ -70,18 +70,13 @@ class CategoryView(View):
         try:
             main_category_id = request.GET.get('main_category_id')
             sub_category_id  = request.GET.get('sub_category_id')
-            sort_type        = request.GET.get('sort')
-
-            sort_list        = {
-                "productPrice_asc"  : "price",
-                "productPrice_desc" : "-price"
-            }
+            sort_type        = request.GET.get('ordering')
 
             product_list     = Product.objects.filter(Q(sub_category=sub_category_id)|
                                                       Q(main_category=main_category_id))
 
-            if(sort_type is not None):
-                product_list = product_list.order_by(sort_list[sort_type])
+            if sort_type:
+                product_list = product_list.order_by(sort_type)
             
             results = [
                 {
@@ -102,7 +97,7 @@ class CategoryView(View):
 class SearchView(View):
     def get(self, request):
         try:
-            keyword = request.GET.get('keyword')
+            keyword = request.GET.get('search')
 
             product_list = Product.objects.filter(name__icontains = keyword)
 

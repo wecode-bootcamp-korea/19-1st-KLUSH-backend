@@ -16,7 +16,7 @@ def validate_email(email):
     return email_form.match(email)
 
 def validate_password(password):
-    password_form = re.compile('^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d](\S){10,}$')
+    password_form = re.compile('^(?=.*[A-Za-z])(?=.*\d)(\S){10,}$')
     return password_form.match(password)
 
 def validate_account_name(account_name):

@@ -78,6 +78,11 @@ class CategoryView(View):
             if sort_type:
                 product_list = product_list.order_by(sort_type)
             
+            if page and limit:
+                start = (int(page) - 1) * int(limit)
+                end   = int(page) * int(limit)
+                product_list = product_list[start : end]
+
             results = [
                 {
                     "id"          : product.id,

@@ -5,6 +5,7 @@ class Order(models.Model):
     order_status    = models.ForeignKey('OrderStatus', on_delete=models.PROTECT)
     shipping_cost   = models.DecimalField(max_digits=20, decimal_places=2, null=True)
     order_date_time = models.DateTimeField(auto_now=True)
+    total_price     = models.DecimalField(max_digits=20, decimal_places=2, null=True)
 
     class Meta:
         db_table = 'orders'
@@ -29,7 +30,6 @@ class Cart(models.Model):
     order       = models.ForeignKey('Order', on_delete=models.CASCADE)
     quantity    = models.IntegerField()
     option      = models.ForeignKey('products.ProductOption', on_delete=models.CASCADE)
-    total_price = models.DecimalField(max_digits=20, decimal_places=2)
 
     class Meta:
         db_table='carts'

@@ -53,6 +53,7 @@ class CartView(View):
             'sub_category_name' : carts.product.sub_category.name,
             'quantity'          : carts.quantity,
             'option'            : carts.option.weight,
+            'product_price'     : carts.product.price,
             'image'             : carts.product.productimage_set.get(thumbnail_status = 1).image_url
             }for carts in cart_lists]
 

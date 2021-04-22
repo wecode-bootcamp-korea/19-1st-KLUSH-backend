@@ -70,25 +70,29 @@ class CategoryView(View):
         try:
             main_category_id = request.GET.get('main_category_id')
             sub_category_id  = request.GET.get('sub_category_id')
-            sort_type        = request.GET.get('sort')
+            keyword          = request.GET.get('search')
+            sort_type        = request.GET.get('ordering')
             page             = request.GET.get('page')
             limit            = request.GET.get('limit')
 
-            sort_list        = {
-                "productPrice_asc"  : "price",
-                "productPrice_desc" : "-price"
+            sort_list = {
+                "priceAsc"  : "price",
+                "priceDesc" : "-price"
             }
 
             product_list     = Product.objects.filter(Q(sub_category=sub_category_id)|
                                                       Q(main_category=main_category_id))
 
-            if(sort_type is not None):
+            if sort_type:
                 product_list = product_list.order_by(sort_list[sort_type])
             
             if page and limit:
                 start = (int(page) - 1) * int(limit)
                 end   = int(page) * int(limit)
                 product_list = product_list[start : end]
+
+            if keyword:
+                product_list = Product.objects.filter(name__icontains = keyword)
 
             results = [
                 {
@@ -105,4 +109,3 @@ class CategoryView(View):
         
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-

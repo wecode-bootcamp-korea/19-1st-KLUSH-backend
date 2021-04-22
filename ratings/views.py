@@ -1,5 +1,4 @@
 import json
-from json.decoder import JSONDecodeError
 
 from django.views     import View
 from django.http      import JsonResponse
@@ -22,6 +21,14 @@ class RateView(View):
 
         except KeyError:
             return JsonResponse ({'MESSAGE': 'KEY_ERROR'}, status=400)
+
+    def get(self,request):
+        user_id    = request.GET.get('user')
+        product_id = request.GET.get('product')
+
+        rate = int(Rate.objects.get(user_id=user_id,product_id=product_id).rate)
+
+        return JsonResponse({'result': rate}, status=200)
 
 class CommentView(View):
     @login_decorator
@@ -53,7 +60,7 @@ class CommentView(View):
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=201)
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-        except JSONDecodeError:
+        except json.JSONDecodeError:
             return JsonResponse({'MESSAGE':'JSON_DECODE_ERROR'}, status=400)
 
     def get(self, request, product_id):
@@ -87,5 +94,5 @@ class CommentView(View):
             return JsonResponse({'MESSAGE':'SUCCESS'}, status=200)
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-        except JSONDecodeError:
+        except json.JSONDecodeError:
             return JsonResponse({'MESSAGE':'JSON_DECODE_ERROR'}, status=400)

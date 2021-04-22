@@ -68,8 +68,9 @@ class CommentView(View):
             return JsonResponse({'MESSAGE':'PRODUCT_DOES_NOT_EXIST'}, status=404)
 
         comment_list = [{
-            'content' : comment_list.content,
-            'image_url' : [image.image_url for image in comment_list.commentimage_set.all()],
+            'user_id'    : comment_list.user.id,
+            'content'    : comment_list.content,
+            'image_url'  : [image.image_url for image in comment_list.commentimage_set.all()],
             'created_at' : comment_list.created_at
             }for comment_list in Comment.objects.filter(product_id = product_id)]
         return JsonResponse({'MESSAGE':'SUCCESS', 'results':comment_list}, status=200)

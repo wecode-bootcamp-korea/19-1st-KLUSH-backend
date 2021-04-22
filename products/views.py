@@ -70,18 +70,29 @@ class CategoryView(View):
         try:
             main_category_id = request.GET.get('main_category_id')
             sub_category_id  = request.GET.get('sub_category_id')
+            keyword          = request.GET.get('search')
             sort_type        = request.GET.get('ordering')
+            page             = request.GET.get('page')
+            limit            = request.GET.get('limit')
+
+            sort_list = {
+                "priceAsc"  : "price",
+                "priceDesc" : "-price"
+            }
 
             product_list     = Product.objects.filter(Q(sub_category=sub_category_id)|
                                                       Q(main_category=main_category_id))
 
             if sort_type:
-                product_list = product_list.order_by(sort_type)
+                product_list = product_list.order_by(sort_list[sort_type])
             
             if page and limit:
                 start = (int(page) - 1) * int(limit)
                 end   = int(page) * int(limit)
                 product_list = product_list[start : end]
+
+            if keyword:
+                product_list = Product.objects.filter(name__icontains = keyword)
 
             results = [
                 {
@@ -96,28 +107,5 @@ class CategoryView(View):
             ]
             return JsonResponse({'results' : results}, status=200)
         
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-
-class SearchView(View):
-    def get(self, request):
-        try:
-            keyword = request.GET.get('search')
-
-            product_list = Product.objects.filter(name__icontains = keyword)
-
-            results = [
-                {
-                    "id"          : product.id,
-                    "image_url"   : product.productimage_set.filter(thumbnail_status=True).first().image_url,
-                    "name"        : product.name,
-                    "description" : product.hashtag,
-                    "price"       : float(product.price), 
-                    "label"       : [{"type" : label.name, "color" : label.color} for label in product.label_set.all()]
-                }
-                for product in product_list
-            ]
-            return JsonResponse({'results' : results}, status=200)
-
         except KeyError:
             return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
